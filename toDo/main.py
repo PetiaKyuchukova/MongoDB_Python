@@ -3,6 +3,7 @@ import pymongo
 def insertOne(name,time):
   mydict = { "name": name, "time": time }
   x = mycol.insert_one(mydict)
+  print("The new Task has been successfully added!")
   
 def findAllTasks():
   for x in mycol.find({},{ "_id": 0, "name": 1, "time": 1 }):
@@ -10,13 +11,13 @@ def findAllTasks():
 
 def findOneTaskByName(name):
   myquery = { "name": name }
-  mydoc = mycol.find(myquery)
+  mydoc = mycol.find(myquery,{ "_id": 0, "name": 1, "time": 1 })
   for x in mydoc:
     print(x)
 
 def findOneTaskByTime(time):
   myquery = { "time": time }
-  mydoc = mycol.find(myquery)
+  mydoc = mycol.find(myquery,{ "_id": 0, "name": 1, "time": 1 })
   for x in mydoc:
     print(x)
 
@@ -24,18 +25,18 @@ def deleteOne(name):
     myquery = { "name": name }
     mycol.delete_one(myquery)
 
-def sortTasksAscending(time):
-  mydoc = mycol.find().sort("time",1)
+def sortTasksAscending():
+  mydoc = mycol.find({},{"_id": 0, "name": 1, "time": 1 }).sort("time",1)
   for x in mydoc:
     print(x)
 
-def sortTasksDescending(time):
-  mydoc = mycol.find().sort("time",-1)
+def sortTasksDescending():
+  mydoc = mycol.find({},{"_id": 0, "name": 1, "time": 1 }).sort("time",-1)
   for x in mydoc:
     print(x)
 
 def updateName():
-  print("Wich document you want to update")
+  print("Which document you want to update")
   print("The name of task is ")
   name = input()
   print("The time of task is ")
@@ -47,7 +48,7 @@ def updateName():
   mycol.update_one(mydict, newValues)
 
 def updateTime():
-  print("Wich document you want to update")
+  print("Which document you want to update")
   print("The name of task is ")
   name = input()
   print("The time of task is ")
@@ -67,6 +68,8 @@ def welcome():
   print("If you want to UPDATE a task`s NAME, key down un!")
   print("If you want to UPDATE a task`s TIME, key down ut!")
   print("If you want to DELETE a task, key down d!")
+  print("SORT tasks ASCENDING, key down sa!")
+  print("SORT tasks DESCENDING, key down sd!")
   input1 = input()
 
   if input1 == "close":
@@ -83,22 +86,23 @@ def welcome():
       print("Please, insert name!")
       name = input()
       findOneTaskByName(name)
-    
     elif(input1 == "st"):
       print("Please, insert time!")
       time = input()
       findOneTaskByTime(time)
-    
     elif(input1 == "d"):
       name = input()
       deleteOne(name)
-    
     elif(input1 == "un"):
-      updateName()
-    
-           
+      updateName()       
     elif (input1 == "ut"):
-      updateTime
+      updateTime()
+    elif (input1 == "sa"):
+      sortTasksAscending()
+     
+    elif (input1 == "sd"):
+      sortTasksDescending()
+    
 
   welcome()  
 
